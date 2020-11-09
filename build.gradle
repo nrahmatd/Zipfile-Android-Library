@@ -20,6 +20,7 @@ allprojects {
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     compileSdkVersion 30
@@ -29,6 +30,14 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0.0"
+        project.archivesBaseName = "zipfile"
+        project.version = android.defaultConfig.versionName
+    }
+
+    libraryVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${archivesBaseName}-${version}.aar"
+        }
     }
 
     buildTypes {
@@ -48,5 +57,28 @@ android {
     }
 }
 
-dependencies {
+def packageName = 'zipfile'
+version '1.0.0'
+group = 'com.aksaramaya.reader'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact("$buildDir/../build/outputs/aar/${packageName}-${version}.aar") {
+                extension 'aar'
+            }
+        }
+    }
+    repositories {
+        maven {
+            name 'nexus'
+            url 'https://nexus.aksaramaya.id/repository/maven-releases'
+            credentials {
+                username project.repoUser
+                password project.repoPassword
+            }
+        }
+    }
 }
+
+dependencies {}
