@@ -1,4 +1,4 @@
-# zipfile
+# Zipfile Android Library
 
 This Library forked from https://github.com/srikanth-lingala/zip4j
 
